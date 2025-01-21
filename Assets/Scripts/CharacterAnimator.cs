@@ -2,9 +2,7 @@ using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
 {
-    public static readonly int IsWalking = Animator.StringToHash(nameof(IsWalking));
-
-    [SerializeField] private PlayerMover _playerMover;
+    private readonly int _isWalking = Animator.StringToHash(nameof(_isWalking));
 
     private Animator _animator;
 
@@ -13,18 +11,13 @@ public class CharacterAnimator : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void OnEnable()
+    public void SetIdleAnimation()
     {
-        _playerMover.CharacterMoved += ChangeMotionStateAnimation;
+        _animator.SetBool(_isWalking, false);
     }
 
-    private void OnDisable()
+    public void SetWalkingAnimation()
     {
-        _playerMover.CharacterMoved -= ChangeMotionStateAnimation;
-    }
-
-    private void ChangeMotionStateAnimation(bool isWalking)
-    {
-        _animator.SetBool(IsWalking, isWalking);
+        _animator.SetBool(_isWalking, true);
     }
 }

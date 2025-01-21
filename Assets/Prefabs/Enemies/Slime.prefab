@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6178395356678892499}
-  - component: {fileID: 797143011109358635}
   - component: {fileID: 5267929777887699997}
   m_Layer: 0
   m_Name: RoutePoint1
@@ -33,51 +32,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4511850810549173128}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &797143011109358635
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1340959159890820602}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &5267929777887699997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,7 +53,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7694132613826324843}
-  - component: {fileID: 1859599119827607441}
   - component: {fileID: 8111546778250034427}
   m_Layer: 0
   m_Name: RoutePoint0
@@ -123,51 +76,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4511850810549173128}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1859599119827607441
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1447011420007166865}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &8111546778250034427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,7 +165,6 @@ GameObject:
   - component: {fileID: 4622473275661248390}
   - component: {fileID: 8888029246541882664}
   - component: {fileID: 3560233655348464177}
-  - component: {fileID: 6327130553891114077}
   - component: {fileID: 8032007764728119069}
   - component: {fileID: 3079646280460929352}
   - component: {fileID: 8950323621904685333}
@@ -308,24 +215,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11020ab53986d2c4cbaf245dbf3d1519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _routePointTrigger: {fileID: 6327130553891114077}
   _routePoints:
   - {fileID: 7694132613826324843}
   - {fileID: 6178395356678892499}
-  _isMoving: 1
   _speed: 1.5
---- !u!114 &6327130553891114077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9141227125145576906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d6768cbf3db1e34ebb97cc5119d70b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _minDistanceToTargetPoint: 0.5
 --- !u!212 &8032007764728119069
 SpriteRenderer:
   m_ObjectHideFlags: 0

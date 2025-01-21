@@ -1,46 +1,37 @@
-using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Player))]
 
 public class PlayerMover : MonoBehaviour
 {
-    private const string Horizontal = nameof(Horizontal);
+    private readonly Quaternion _rightFacing = new Quaternion(0f,0f,0f,0f);
+    private readonly Quaternion _leftFacing = new Quaternion(0f, 180f, 0f, 0f);
 
     [SerializeField] private StateInspector _stateInspector;
+    [SerializeField] private CharacterAnimator _characterAnimator;
 
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpPower;
 
     private Rigidbody2D _rigidbody;
+    private Player _player;
     private bool _isCharacterMoving;
-    private bool _isDefaultDirection = true;
     private float _movingDistanceDivider = 2f;
-
-    public event Action DirectionChanged;
-    public event Action<bool> CharacterMoved;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _player = GetComponent<Player>();
     }
 
-    private void Update()
+    public void Move(float inputDistance)
     {
-        Move();
-        JumpUp();
-    }
-
-    private void Move()
-    {
-        float distance = Input.GetAxis(Horizontal) * _speed * Time.deltaTime;
-
-        if (distance == 0)
+        if (inputDistance == 0)
         {
             if (_isCharacterMoving == true)
             {
                 _isCharacterMoving = false;
-                CharacterMoved?.Invoke(_isCharacterMoving);
+                _characterAnimator.SetIdleAnimation();
             }
 
             return;
@@ -49,39 +40,31 @@ public class PlayerMover : MonoBehaviour
         if(_isCharacterMoving == false)
         {
             _isCharacterMoving = true;
-            CharacterMoved?.Invoke(_isCharacterMoving);
+            _characterAnimator.SetWalkingAnimation();
         }
 
         if(_stateInspector.IsGrounded() == false)
         {
-            distance /= _movingDistanceDivider;
+            inputDistance /= _movingDistanceDivider;
         }
 
-        CheckDirection(distance);
-        transform.Translate(distance * Vector3.right);
+        CheckFacing(inputDistance);
+        transform.Translate(Mathf.Abs(inputDistance) * _speed * Vector3.right * Time.deltaTime);
     }
 
-    private void JumpUp()
+    public void JumpUp()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && _stateInspector.IsGrounded() == true)
-        {
-            Vector2 jumpForce = Vector2.up * _jumpPower;
+        if (_stateInspector.IsGrounded() == false)
+            return;
 
-            _rigidbody.AddForce(jumpForce);
-        }
+        Vector2 jumpForce = Vector2.up * _jumpPower;
+
+        _rigidbody.AddForce(jumpForce);
     }
 
-    private void CheckDirection(float distance)
+    private void CheckFacing(float distance)
     {
-        if (distance < 0 && _isDefaultDirection == true)
-        {
-            _isDefaultDirection = false;
-            DirectionChanged?.Invoke();
-        }
-        else if(distance > 0 && _isDefaultDirection == false)
-        {
-            _isDefaultDirection = true;
-            DirectionChanged?.Invoke();
-        }
+        if (distance < 0 && _player.IsRightFacing == true || distance > 0 && _player.IsRightFacing == false)
+            _player.Flip();
     }
 }
