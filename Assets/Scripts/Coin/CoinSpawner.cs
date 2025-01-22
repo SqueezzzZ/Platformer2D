@@ -7,10 +7,10 @@ public class CoinSpawner : MonoBehaviour
 
     private void Start()
     {
-        SpawnCoins();
+        Spawn();
     }
 
-    private void SpawnCoins()
+    private void Spawn()
     {
         for (int i = 0; i < _coinSpawnPoints.Length; i++)
         {

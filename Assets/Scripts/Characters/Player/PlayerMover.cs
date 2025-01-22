@@ -1,34 +1,39 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Player))]
+[RequireComponent(typeof(Rigidbody2D))]
 
 public class PlayerMover : MonoBehaviour
 {
-    private readonly Quaternion _rightFacing = new Quaternion(0f,0f,0f,0f);
-    private readonly Quaternion _leftFacing = new Quaternion(0f, 180f, 0f, 0f);
-
-    [SerializeField] private StateInspector _stateInspector;
+    [SerializeField] private InputService _inputService;
+    [SerializeField] private GroundDetector _groundDetector;
+    [SerializeField] private Rotator _rotator;
     [SerializeField] private CharacterAnimator _characterAnimator;
 
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpPower;
 
     private Rigidbody2D _rigidbody;
-    private Player _player;
     private bool _isCharacterMoving;
     private float _movingDistanceDivider = 2f;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _player = GetComponent<Player>();
     }
 
-    public void Move(float inputDistance)
+    private void Update()
     {
+        Move();
+        JumpUp();
+    }
+
+    public void Move()
+    {
+        float inputDistance = _inputService.GetHorizontalAxis();
+
         if (inputDistance == 0)
         {
-            if (_isCharacterMoving == true)
+            if (_isCharacterMoving)
             {
                 _isCharacterMoving = false;
                 _characterAnimator.SetIdleAnimation();
@@ -43,18 +48,21 @@ public class PlayerMover : MonoBehaviour
             _characterAnimator.SetWalkingAnimation();
         }
 
-        if(_stateInspector.IsGrounded() == false)
+        if(_groundDetector.IsGrounded() == false)
         {
             inputDistance /= _movingDistanceDivider;
         }
 
         CheckFacing(inputDistance);
-        transform.Translate(Mathf.Abs(inputDistance) * _speed * Vector3.right * Time.deltaTime);
+        transform.Translate(inputDistance * transform.right * (_speed * Time.deltaTime) );
     }
 
     public void JumpUp()
     {
-        if (_stateInspector.IsGrounded() == false)
+        if (_inputService.IsJumpKeyPressed() == false)
+            return;
+
+        if (_groundDetector.IsGrounded() == false)
             return;
 
         Vector2 jumpForce = Vector2.up * _jumpPower;
@@ -64,7 +72,7 @@ public class PlayerMover : MonoBehaviour
 
     private void CheckFacing(float distance)
     {
-        if (distance < 0 && _player.IsRightFacing == true || distance > 0 && _player.IsRightFacing == false)
-            _player.Flip();
+        if (distance < 0 && _rotator.IsRightFacing || distance > 0 && _rotator.IsRightFacing == false)
+            _rotator.Flip();
     }
 }

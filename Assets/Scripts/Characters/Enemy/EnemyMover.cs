@@ -1,20 +1,13 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Enemy))]
-
 public class EnemyMover : MonoBehaviour
 {
     [SerializeField] private Transform[] _routePoints;
+    [SerializeField] private Rotator _rotator;
     [SerializeField] private float _speed;
     [SerializeField] private float _minDistanceToTargetPoint = 0.5f;
 
-    private Enemy _enemy;
     private int _currentPointNumber = 0;
-
-    private void Awake()
-    {
-        _enemy = GetComponent<Enemy>();
-    }
 
     private void Update()
     {
@@ -28,7 +21,7 @@ public class EnemyMover : MonoBehaviour
         if(IsEnoughDistance(transform.position, _routePoints[_currentPointNumber].position, _minDistanceToTargetPoint))
         {
             UpdateCurrentPoint();
-            _enemy.Flip();
+            _rotator.Flip();
         }
     }
 
