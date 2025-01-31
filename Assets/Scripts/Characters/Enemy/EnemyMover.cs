@@ -16,18 +16,19 @@ public class EnemyMover : MonoBehaviour
 
     private void Move()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _routePoints[_currentPointNumber].position, _speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, 
+            _routePoints[_currentPointNumber].position, _speed * Time.deltaTime);
 
         if(IsEnoughDistance(transform.position, _routePoints[_currentPointNumber].position, _minDistanceToTargetPoint))
         {
             UpdateCurrentPoint();
-            _rotator.Flip();
+            _rotator.UpdateFacing(_routePoints[_currentPointNumber]);
         }
     }
 
     private void UpdateCurrentPoint()
     {
-        _currentPointNumber = (_currentPointNumber + 1) % _routePoints.Length;
+        _currentPointNumber = (++_currentPointNumber) % _routePoints.Length;
     }
 
     private bool IsEnoughDistance(Vector3 thisPoint, Vector3 targetPoint, float distance)

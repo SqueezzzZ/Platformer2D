@@ -3,16 +3,25 @@ using UnityEngine;
 public class InputService : MonoBehaviour
 {
     private const string Horizontal = nameof(Horizontal);
-
     private const KeyCode JumpKeyCode = KeyCode.Space;
 
-    public float GetHorizontalAxis()
+    private bool _canJump;
+
+    public bool CanJump => GetBoolAsTrigger(ref _canJump);
+    public float HorizontalAxis { get; private set; }
+
+    private void Update()
     {
-        return Input.GetAxis(Horizontal);
+        HorizontalAxis = Input.GetAxis(Horizontal);
+
+        if (Input.GetKeyDown(JumpKeyCode))
+            _canJump = true;
     }
 
-    public bool IsJumpKeyPressed()
+    private bool GetBoolAsTrigger(ref bool value)
     {
-        return Input.GetKeyDown(JumpKeyCode);
+        bool localValue = value;
+        value = false;
+        return localValue;
     }
 }

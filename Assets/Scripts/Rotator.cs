@@ -2,16 +2,45 @@ using UnityEngine;
 
 public class Rotator : MonoBehaviour
 {
-    private readonly Quaternion _rightFacing = new Quaternion(0f, 0f, 0f, 0f);
-    private readonly Quaternion _leftFacing = new Quaternion(0f, 180f, 0f, 0f);
+    private readonly Quaternion _rightFacing = Quaternion.Euler(0, 0, 0);
+    private readonly Quaternion _leftFacing = Quaternion.Euler(0f, 180.0f, 0f);
 
-    public bool IsRightFacing => transform.rotation.y == 0;
-
-    public void Flip()
+    public void UpdateFacing(float inputDirection)
     {
-        if (IsRightFacing)
-            transform.rotation = _leftFacing;
-        else
-            transform.rotation = _rightFacing;
+        if (inputDirection == 0)
+            return;
+
+        if (IsRightDirection(inputDirection) && IsRightFacing())
+            return;
+
+        if (IsRightDirection(inputDirection) == false && IsRightFacing() == false)
+            return;
+
+        Flip();
+    }
+
+    public void UpdateFacing(Transform targetPoint)
+    {
+        float offset = transform.position.x - targetPoint.position.x;
+
+        if (offset == 0)
+            return;
+
+        transform.rotation = offset > 0 ? _rightFacing : _leftFacing;
+    }
+
+    private void Flip()
+    {
+        transform.rotation = IsRightFacing() ? _leftFacing : _rightFacing;
+    }
+
+    private bool IsRightDirection(float inputDirection)
+    {
+        return inputDirection > 0;
+    }
+
+    private bool IsRightFacing()
+    {
+        return transform.rotation == _rightFacing;
     }
 }

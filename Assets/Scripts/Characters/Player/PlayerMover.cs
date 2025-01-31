@@ -1,78 +1,35 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-
 public class PlayerMover : MonoBehaviour
 {
-    [SerializeField] private InputService _inputService;
-    [SerializeField] private GroundDetector _groundDetector;
-    [SerializeField] private Rotator _rotator;
-    [SerializeField] private CharacterAnimator _characterAnimator;
-
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpPower;
 
     private Rigidbody2D _rigidbody;
-    private bool _isCharacterMoving;
+
     private float _movingDistanceDivider = 2f;
+    private float _minVerticalSpeed = 0.05f;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    public void Move(float inputDistance, bool isGrounded)
     {
-        Move();
-        JumpUp();
-    }
-
-    public void Move()
-    {
-        float inputDistance = _inputService.GetHorizontalAxis();
-
-        if (inputDistance == 0)
-        {
-            if (_isCharacterMoving)
-            {
-                _isCharacterMoving = false;
-                _characterAnimator.SetIdleAnimation();
-            }
-
+        if (isGrounded == false && _rigidbody.velocity.y <= _minVerticalSpeed)
             return;
-        }
 
-        if(_isCharacterMoving == false)
-        {
-            _isCharacterMoving = true;
-            _characterAnimator.SetWalkingAnimation();
-        }
+        inputDistance = isGrounded ? inputDistance : inputDistance / _movingDistanceDivider;
 
-        if(_groundDetector.IsGrounded() == false)
-        {
-            inputDistance /= _movingDistanceDivider;
-        }
-
-        CheckFacing(inputDistance);
-        transform.Translate(inputDistance * transform.right * (_speed * Time.deltaTime) );
+        _rigidbody.velocity = new Vector2(inputDistance * _speed, _rigidbody.velocity.y);
     }
 
     public void JumpUp()
     {
-        if (_inputService.IsJumpKeyPressed() == false)
-            return;
-
-        if (_groundDetector.IsGrounded() == false)
-            return;
-
         Vector2 jumpForce = Vector2.up * _jumpPower;
 
         _rigidbody.AddForce(jumpForce);
-    }
-
-    private void CheckFacing(float distance)
-    {
-        if (distance < 0 && _rotator.IsRightFacing || distance > 0 && _rotator.IsRightFacing == false)
-            _rotator.Flip();
     }
 }

@@ -322,38 +322,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &536505553
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 536505554}
-  m_Layer: 0
-  m_Name: CoinSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &536505554
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536505553}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1103151184}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &701090244
 GameObject:
   m_ObjectHideFlags: 0
@@ -1950,37 +1918,6 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!1 &1103151183
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1103151184}
-  m_Layer: 0
-  m_Name: CoinPositions
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1103151184
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1103151183}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 536505554}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1353044768
 GameObject:
   m_ObjectHideFlags: 0
@@ -2288,6 +2225,7 @@ GameObject:
   - component: {fileID: 1928385153}
   - component: {fileID: 1928385159}
   - component: {fileID: 1928385160}
+  - component: {fileID: 1928385168}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2401,10 +2339,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2e91e09e6a22e4479934cf52384810b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputService: {fileID: 1692883589}
-  _groundDetector: {fileID: 1928385166}
-  _rotator: {fileID: 1928385167}
-  _characterAnimator: {fileID: 1928385162}
   _speed: 5
   _jumpPower: 600
 --- !u!61 &1928385159
@@ -2551,6 +2485,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba49dcff49f3fc45b749939df75b284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1928385168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928385152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d0cafa7c7ccde54bb075b86e93abffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1956464088486240264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2616,8 +2562,7 @@ SceneRoots:
   - {fileID: 1928385156}
   - {fileID: 1692883590}
   - {fileID: 1353044769}
-  - {fileID: 536505554}
   - {fileID: 138841991}
-  - {fileID: 1956464088486240264}
   - {fileID: 701090246}
+  - {fileID: 1956464088486240264}
   - {fileID: 1714984242}

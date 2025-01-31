@@ -6,6 +6,8 @@ public class CharacterAnimator : MonoBehaviour
 
     private Animator _animator;
 
+    public bool IsWalkingAnim => _animator.GetBool(_isWalking);
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();
