@@ -19,14 +19,17 @@ public class Rotator : MonoBehaviour
         Flip();
     }
 
-    public void UpdateFacing(Transform targetPoint)
+    public void UpdateFacing(Vector3 targetPoint)
     {
-        float offset = transform.position.x - targetPoint.position.x;
+        float offset = transform.position.x - targetPoint.x;
 
         if (offset == 0)
             return;
 
-        transform.rotation = offset > 0 ? _rightFacing : _leftFacing;
+        if (offset > 0 && IsRightFacing() == false || offset < 0 && IsRightFacing())
+            return;
+
+        transform.rotation = offset > 0 ? _leftFacing : _rightFacing;
     }
 
     private void Flip()

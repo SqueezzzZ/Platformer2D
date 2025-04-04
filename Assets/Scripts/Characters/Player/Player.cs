@@ -2,17 +2,22 @@ using UnityEngine;
 
 [RequireComponent(typeof(InputService), typeof(PlayerMover))]
 [RequireComponent(typeof(CharacterAnimator), typeof(GroundDetector))]
-[RequireComponent(typeof(Rotator), typeof(Collector))]
+[RequireComponent(typeof(Collector))]
 [RequireComponent(typeof(Wallet))]
-public class Player : MonoBehaviour 
+[RequireComponent(typeof(PlayerAttacker))]
+[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Rotator))]
+public class Player : MonoBehaviour
 {
     private InputService _inputService;
     private PlayerMover _playerMover;
     private CharacterAnimator _characterAnimator;
     private GroundDetector _groundDetector;
-    private Rotator _rotator;
     private Collector _collector;
     private Wallet _wallet;
+    private PlayerAttacker _playerAttacker;
+    private Rotator _rotator;
+    private Health _health;
 
     private void Awake()
     {
@@ -20,25 +25,44 @@ public class Player : MonoBehaviour
         _playerMover = GetComponent<PlayerMover>();
         _characterAnimator = GetComponent<CharacterAnimator>();
         _groundDetector = GetComponent<GroundDetector>();
-        _rotator = GetComponent<Rotator>();
         _collector = GetComponent<Collector>();
         _wallet = GetComponent<Wallet>();
+        _playerAttacker = GetComponent<PlayerAttacker>();
+        _rotator = GetComponent<Rotator>();
+        _health = GetComponent<Health>();
     }
 
     private void OnEnable()
     {
         _collector.PickedUp += OnCollect;
+        _health.Ended += OnHealthEnded;
     }
 
     private void OnDisable()
     {
         _collector.PickedUp -= OnCollect;
+        _health.Ended -= OnHealthEnded;
     }
 
     private void FixedUpdate()
     {
         UpdateMoving();
         UpdateJumping();
+    }
+
+    private void Update()
+    {
+        UpdateAttacking();
+    }
+
+    public void TakeDamage(int amount)
+    {
+        _health.Take(amount);
+    }
+
+    public void Push(Vector2 direction, float power)
+    {
+        _playerMover.Push(direction, power);
     }
 
     private void UpdateMoving()
@@ -65,11 +89,30 @@ public class Player : MonoBehaviour
             _playerMover.JumpUp();
     }
 
+    private void UpdateAttacking()
+    {
+        if(_inputService.CanAttack)
+            _playerAttacker.Shoot();
+    }
+
     private void OnCollect(Pickupable pickupable)
     {
-        if(pickupable.TryGetComponent(out Coin coin))
+        if (pickupable.TryGetComponent(out Coin coin))
             _wallet.AddCoins(coin.Price);
 
+        if (pickupable.TryGetComponent(out Medicine medicine))
+            _health.Add(medicine.HealthAmount);
+
         pickupable.Collect();
+    }
+
+    private void OnHealthEnded()
+    {
+        Die();
+    }
+
+    private void Die()
+    {
+        gameObject.SetActive(false);
     }
 }

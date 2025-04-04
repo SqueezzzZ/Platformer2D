@@ -32,4 +32,12 @@ public class PlayerMover : MonoBehaviour
 
         _rigidbody.AddForce(jumpForce);
     }
+
+    public void Push(Vector2 direction, float power)
+    {
+        if (power <= 0 || direction == Vector2.zero)
+            return;
+
+        _rigidbody.AddForce(power * direction);
+    }
 }

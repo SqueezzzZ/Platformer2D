@@ -1,38 +1,46 @@
+using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyMover : MonoBehaviour
 {
-    [SerializeField] private Transform[] _routePoints;
-    [SerializeField] private Rotator _rotator;
     [SerializeField] private float _speed;
-    [SerializeField] private float _minDistanceToTargetPoint = 0.5f;
 
-    private int _currentPointNumber = 0;
+    private Rigidbody2D _rigidbody;
+    private Coroutine _movingCoroutine;
 
-    private void Update()
+    public bool IsMoving { get; private set; }
+
+    private void Awake()
     {
-        Move();
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    private void Move()
+    public void StartMoving()
     {
-        transform.position = Vector3.MoveTowards(transform.position, 
-            _routePoints[_currentPointNumber].position, _speed * Time.deltaTime);
+        IsMoving = true;
+        _movingCoroutine = StartCoroutine(MoveFixed());
+    }
 
-        if(IsEnoughDistance(transform.position, _routePoints[_currentPointNumber].position, _minDistanceToTargetPoint))
+    public void StopMoving()
+    {
+        StopCoroutine(_movingCoroutine);
+        IsMoving = false;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        _speed = speed < 0? 0 : speed;
+    }
+
+    private IEnumerator MoveFixed()
+    {
+        while (IsMoving)
         {
-            UpdateCurrentPoint();
-            _rotator.UpdateFacing(_routePoints[_currentPointNumber]);
+            float xSpeed = _speed * transform.right.x;
+
+            _rigidbody.velocity = new Vector2(xSpeed, _rigidbody.velocity.y);
+            yield return new WaitForFixedUpdate();
         }
-    }
-
-    private void UpdateCurrentPoint()
-    {
-        _currentPointNumber = (++_currentPointNumber) % _routePoints.Length;
-    }
-
-    private bool IsEnoughDistance(Vector3 thisPoint, Vector3 targetPoint, float distance)
-    {
-        return (targetPoint - thisPoint).sqrMagnitude <= distance * distance;
     }
 }

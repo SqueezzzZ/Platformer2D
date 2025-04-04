@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class CoinSpawner : MonoBehaviour
+public class PickupableSpawner : MonoBehaviour
 {
-    [SerializeField] private Pickupable _coinPrefab;
-    [SerializeField] private Transform[] _coinSpawnPoints;
+    [SerializeField] private Pickupable _prefab;
+    [SerializeField] private Transform[] _spawnPoints;
 
     private void Start()
     {
@@ -20,9 +20,9 @@ public class CoinSpawner : MonoBehaviour
     {
         Pickupable pickupable;
 
-        for (int i = 0; i < _coinSpawnPoints.Length; i++)
+        for (int i = 0; i < _spawnPoints.Length; i++)
         {
-            pickupable = Instantiate(_coinPrefab, _coinSpawnPoints[i].position, Quaternion.identity);
+            pickupable = Instantiate(_prefab, _spawnPoints[i].position, Quaternion.identity);
 
             pickupable.Collected += OnCollected;
         }
