@@ -10,39 +10,31 @@ using UnityEngine;
 [RequireComponent(typeof(Damager))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private Player _player;
-
-    private EnemyMover _enemyMover;
-    private PlayerScaner _playerScaner;
-    private Patroller _patroller;
-    private Waiter _waiter;
-    private Rotator _rotator;
     private Health _health;
-    private CharacterAnimator _animator;
     private EnemyStateMachine _stateMachine;
-    private Damager _damager;
 
-    public PatrolState PatrolState { get; private set; }
-    public WaitState WaitState { get; private set; } 
-    public ChaseState ChaseState { get; private set; }
+    public EnemyMover Mover { get; private set; }
+    public PlayerScaner PlayerScaner { get; private set; }
+    public Patroller Patroller { get; private set; }
+    public Waiter Waiter { get; private set; }
+    public Rotator Rotator { get; private set; }
+    public CharacterAnimator Animator { get; private set; }
+    public Damager Damager { get; private set; }
 
-    public float ChasingMovingSpeed { get; private set; } = 1.4f;
+    public Player TargetPlayer { get; private set; }
 
     private void Awake()
     {
-        _enemyMover = GetComponent<EnemyMover>();
-        _playerScaner = GetComponent<PlayerScaner>();
-        _patroller = GetComponent<Patroller>();
-        _waiter = GetComponent<Waiter>();
-        _rotator = GetComponent<Rotator>();
-        _health = GetComponent<Health>();
-        _animator = GetComponent<CharacterAnimator>();
-        _damager = GetComponent<Damager>();
+        Mover = GetComponent<EnemyMover>();
+        PlayerScaner = GetComponent<PlayerScaner>();
+        Patroller = GetComponent<Patroller>();
+        Waiter = GetComponent<Waiter>();
+        Rotator = GetComponent<Rotator>();
+        Animator = GetComponent<CharacterAnimator>();
+        Damager = GetComponent<Damager>();
 
-        _stateMachine = new EnemyStateMachine();
-        PatrolState = new PatrolState(this, _stateMachine, _player, _enemyMover, _patroller, _playerScaner, _rotator, _animator);
-        WaitState = new WaitState(this, _stateMachine, _player, _animator, _waiter);
-        ChaseState = new ChaseState(this, _player, _stateMachine, _enemyMover, _rotator, _animator);
+        _health = GetComponent<Health>();
+        _stateMachine = new ();
     }
 
     private void OnEnable()
@@ -57,7 +49,8 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        _stateMachine.Init(PatrolState);
+        SetTargetPlayer(null);
+        _stateMachine.Init(this);
     }
 
     private void FixedUpdate()
@@ -71,8 +64,8 @@ public class Enemy : MonoBehaviour
         {
             Vector2 hitDirection = (collision.transform.position - transform.position).normalized;
 
-            _damager.DamagePlayer(player);
-            _damager.HitPlayer(player, hitDirection);
+            Damager.DamagePlayer(player);
+            Damager.HitPlayer(player, hitDirection);
         }
     }
 
@@ -84,6 +77,11 @@ public class Enemy : MonoBehaviour
     public void Damage(int damageAmount)
     {
         _health.Take(damageAmount);
+    }
+
+    public void SetTargetPlayer(Player targetPlayer)
+    {
+        TargetPlayer = targetPlayer;
     }
 
     private void OnHealthEnded()

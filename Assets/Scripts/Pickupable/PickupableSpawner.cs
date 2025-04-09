@@ -13,7 +13,7 @@ public class PickupableSpawner : MonoBehaviour
     public void OnCollected(Pickupable pickupable)
     {
         pickupable.Collected -= OnCollected;
-        pickupable.Destroy();
+        Destroy(pickupable.gameObject);
     }
 
     private void Spawn()

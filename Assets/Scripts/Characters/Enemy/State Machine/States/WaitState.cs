@@ -1,41 +1,43 @@
-public class WaitState : State
+public class WaitState : IState
 {
+    private IStateMachine _stateMachine;
     private Enemy _enemy;
-    private EnemyStateMachine _enemyStateMachine;
-    private Player _player;
     private CharacterAnimator _animator;
     private Waiter _waiter;
+    private PlayerScaner _scaner;
 
-    public WaitState(Enemy enemy, EnemyStateMachine enemyStateMachine, Player player, CharacterAnimator animator, Waiter waiter)
+    public WaitState(IStateMachine stateMachine, Enemy enemy, CharacterAnimator animator, Waiter waiter, PlayerScaner scaner)
     {
+        _stateMachine = stateMachine;
         _enemy = enemy;
-        _enemyStateMachine = enemyStateMachine;
-        _player = player;
         _animator = animator;
         _waiter = waiter;
+        _scaner = scaner;
     }
 
-    public override void Enter()
+    public void Enter()
     {
         _animator.SetIdleAnimation();
         _waiter.StartWaiting();
     }
 
-    public override void Exit() { }
+    public void Exit() { }
 
-    public override void Update() 
+    public void Update() 
     { 
-        if(Utilities.IsEnoughDistance(_enemy.transform.position, _player.transform.position, _waiter.MinDistaceToAttack))
+        if(_scaner.TryGetPlayerInRadius(_waiter.MinDistaceToAttack, out Player player))
         {
-            _enemyStateMachine.ChangeState(_enemy.ChaseState);
+            _enemy.SetTargetPlayer(player);
+            _stateMachine.ChangeState<ChaseState>();
             return;
         }
 
         if(_waiter.CanStopWaiting())
         {
-            _enemyStateMachine.ChangeState(_enemy.PatrolState);
+            _stateMachine.ChangeState<PatrolState>();
+            _enemy.SetTargetPlayer(null);
         }
     }
 
-    public override void FixedUpdate() { }
+    public void FixedUpdate() { }
 }

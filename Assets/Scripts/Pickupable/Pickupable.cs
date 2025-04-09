@@ -10,9 +10,4 @@ public abstract class Pickupable : MonoBehaviour
     {
         Collected?.Invoke(this);
     }
-
-    public void Destroy()
-    {
-        Destroy(gameObject);
-    }
 }

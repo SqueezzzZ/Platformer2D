@@ -28,19 +28,21 @@ public class EnemyMover : MonoBehaviour
         IsMoving = false;
     }
 
-    public void SetSpeed(float speed)
+    public void SetDirectedSpeed(float speed)
     {
-        _speed = speed < 0? 0 : speed;
+        _speed = speed;
     }
 
     private IEnumerator MoveFixed()
     {
+        var wait = new WaitForFixedUpdate();
+
         while (IsMoving)
         {
             float xSpeed = _speed * transform.right.x;
 
             _rigidbody.velocity = new Vector2(xSpeed, _rigidbody.velocity.y);
-            yield return new WaitForFixedUpdate();
+            yield return wait;
         }
     }
 }

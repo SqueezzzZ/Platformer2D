@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 [RequireComponent(typeof(ArrowMover))]
 public class Arrow : MonoBehaviour
@@ -9,6 +10,7 @@ public class Arrow : MonoBehaviour
     private int _arrowDamage = 50;
 
     public event Action<Arrow> Collided;
+    public event Action<Arrow> LifeTimeEnded;
 
     private void Awake()
     {
@@ -48,19 +50,25 @@ public class Arrow : MonoBehaviour
         transform.rotation = rotation;
     }
 
+    public void StartLifetimeCoroutine(int lifetime)
+    {
+        _lifetimeCorutine = StartCoroutine(WaitLifetimeEnd(lifetime));
+    }
+
     public void SetLifetimeCoroutine(Coroutine coroutine)
     {
         _lifetimeCorutine = coroutine;
-    }
-
-    public void Destroy()
-    {
-        Destroy(gameObject);
     }
 
     private void Collide()
     {
         StopCoroutine(_lifetimeCorutine);
         Collided?.Invoke(this);
+    }
+
+    private IEnumerator WaitLifetimeEnd(int arrowLifetime)
+    {
+        yield return new WaitForSeconds(arrowLifetime);
+        LifeTimeEnded?.Invoke(this);
     }
 }

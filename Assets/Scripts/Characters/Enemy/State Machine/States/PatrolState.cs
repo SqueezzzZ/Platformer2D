@@ -1,22 +1,21 @@
-public class PatrolState : State
+public class PatrolState : IState
 {
     private Enemy _enemy;
-    private EnemyStateMachine _stateMachine;
-    private Player _player;
+    private IStateMachine _stateMachine;
     private EnemyMover _enemyMover;
     private Patroller _patroller;
     private PlayerScaner _playerScaner;
     private Rotator _rotator;
     private CharacterAnimator _animator;
 
-    private float _minDistanceToAttack = 1f;
+    private float _detectionRadius = 1f;
+    private float _viewDetectionRange = 5f;
 
-    public PatrolState(Enemy enemy, EnemyStateMachine stateMachine, Player player, EnemyMover enemyMover, 
+    public PatrolState(IStateMachine stateMachine, Enemy enemy, EnemyMover enemyMover, 
         Patroller patroller, PlayerScaner playerScaner, Rotator rotator, CharacterAnimator animator)
     {
-        _enemy = enemy;
         _stateMachine = stateMachine;
-        _player = player;
+        _enemy = enemy;
         _enemyMover = enemyMover;
         _patroller = patroller;
         _playerScaner = playerScaner;
@@ -24,20 +23,20 @@ public class PatrolState : State
         _animator = animator;
     }
 
-    public override void Enter()
+    public void Enter()
     {
         _animator.SetWalkingAnimation();
         _rotator.UpdateFacing(_patroller.CurrentPointPosition);
-        _enemyMover.SetSpeed(_patroller.PatrolMovingSpeed);
+        _enemyMover.SetDirectedSpeed(_patroller.PatrolMovingSpeed);
         _enemyMover.StartMoving();
     }
 
-    public override void Exit()
+    public void Exit()
     {
         _enemyMover.StopMoving();
     }
 
-    public override void Update() 
+    public void Update() 
     {
         if (_patroller.IsAtTargetPoint())
         {
@@ -46,11 +45,12 @@ public class PatrolState : State
         }
     }
 
-    public override void FixedUpdate()
+    public void FixedUpdate()
     {
-        if (_playerScaner.IsPlayerInView() || Utilities.IsEnoughDistance(_enemy.transform.position, _player.transform.position, _minDistanceToAttack))
+        if (_playerScaner.TryGetPlayerInView(_viewDetectionRange, out Player player) || _playerScaner.TryGetPlayerInRadius(_detectionRadius, out player))
         {
-            _stateMachine.ChangeState(_enemy.ChaseState);
+            _enemy.SetTargetPlayer(player);
+            _stateMachine.ChangeState<ChaseState>();
         }
     }
 }

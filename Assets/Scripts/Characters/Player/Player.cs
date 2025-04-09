@@ -7,29 +7,32 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAttacker))]
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Rotator))]
+[RequireComponent(typeof(Pusher))]
 public class Player : MonoBehaviour
 {
     private InputService _inputService;
-    private PlayerMover _playerMover;
+    private PlayerMover _mover;
     private CharacterAnimator _characterAnimator;
     private GroundDetector _groundDetector;
     private Collector _collector;
     private Wallet _wallet;
-    private PlayerAttacker _playerAttacker;
+    private PlayerAttacker _attacker;
     private Rotator _rotator;
     private Health _health;
+    private Pusher _pusher;
 
     private void Awake()
     {
         _inputService = GetComponent<InputService>();
-        _playerMover = GetComponent<PlayerMover>();
+        _mover = GetComponent<PlayerMover>();
         _characterAnimator = GetComponent<CharacterAnimator>();
         _groundDetector = GetComponent<GroundDetector>();
         _collector = GetComponent<Collector>();
         _wallet = GetComponent<Wallet>();
-        _playerAttacker = GetComponent<PlayerAttacker>();
+        _attacker = GetComponent<PlayerAttacker>();
         _rotator = GetComponent<Rotator>();
         _health = GetComponent<Health>();
+        _pusher = GetComponent<Pusher>();
     }
 
     private void OnEnable()
@@ -62,14 +65,14 @@ public class Player : MonoBehaviour
 
     public void Push(Vector2 direction, float power)
     {
-        _playerMover.Push(direction, power);
+        _pusher.Push(direction, power);
     }
 
     private void UpdateMoving()
     {
         if (_inputService.HorizontalAxis != 0)
         {
-            _playerMover.Move(_inputService.HorizontalAxis, _groundDetector.IsGrounded());
+            _mover.Move(_inputService.HorizontalAxis, _groundDetector.IsGrounded());
             _rotator.UpdateFacing(_inputService.HorizontalAxis);
 
             if (_characterAnimator.IsWalkingAnim == false)
@@ -86,13 +89,13 @@ public class Player : MonoBehaviour
     private void UpdateJumping()
     {
         if(_inputService.CanJump && _groundDetector.IsGrounded())
-            _playerMover.JumpUp();
+            _mover.JumpUp();
     }
 
     private void UpdateAttacking()
     {
         if(_inputService.CanAttack)
-            _playerAttacker.Shoot();
+            _attacker.Shoot();
     }
 
     private void OnCollect(Pickupable pickupable)

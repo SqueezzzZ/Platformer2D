@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Pool;
-using System.Collections;
 
 public class ArrowSpawner : MonoBehaviour
 {
@@ -33,31 +32,37 @@ public class ArrowSpawner : MonoBehaviour
         Arrow arrow = Instantiate(_arrowPrefab, transform.position, transform.rotation);
 
         arrow.Collided += OnCollided;
+        arrow.LifeTimeEnded += OnLifetimeEnded;
         return arrow;
     }
 
     private void ActionOnGet(Arrow arrow)
     {
-        arrow.SetPosition(transform.position);
-        arrow.SetRotation(transform.rotation);
-        arrow.SetActive(true);
-        arrow.SetLifetimeCoroutine(StartCoroutine(ReleaseArrowDelayed(arrow)));
+        Initalize(arrow);
     }
 
     private void DestroyArrow(Arrow arrow)
     {
         arrow.Collided -= OnCollided;
-        arrow.Destroy();
-    }
-
-    private IEnumerator ReleaseArrowDelayed(Arrow arrow)
-    {
-        yield return new WaitForSeconds(_arrowLifetime);
-        _arrowPool.Release(arrow);
+        arrow.LifeTimeEnded -= OnLifetimeEnded;
+        Destroy(arrow.gameObject);
     }
 
     private void OnCollided(Arrow arrow)
     {
         _arrowPool.Release(arrow);
+    }
+
+    private void OnLifetimeEnded(Arrow arrow)
+    {
+        _arrowPool.Release(arrow);
+    }
+
+    private void Initalize(Arrow arrow)
+    {
+        arrow.SetPosition(transform.position);
+        arrow.SetRotation(transform.rotation);
+        arrow.SetActive(true);
+        arrow.StartLifetimeCoroutine(_arrowLifetime);
     }
 }

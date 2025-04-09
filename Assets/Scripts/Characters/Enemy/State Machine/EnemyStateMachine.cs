@@ -1,19 +1,37 @@
-public class EnemyStateMachine
+using System;
+using System.Collections.Generic;
+
+public class EnemyStateMachine : IStateMachine
 {
-    public State CurrentState { get; private set; }
+    private Dictionary<Type, IState> _states = new ();
 
-    public void ChangeState(State newState)
+    public IState CurrentState { get; private set; }
+
+    public void Init(Enemy enemy)
     {
-        if (CurrentState != null)
-            CurrentState.Exit();
+        _states.Add(typeof(PatrolState), new PatrolState(this, enemy, enemy.Mover, enemy.Patroller, enemy.PlayerScaner, enemy.Rotator, enemy.Animator));
+        _states.Add(typeof(WaitState), new WaitState(this, enemy, enemy.Animator, enemy.Waiter, enemy.PlayerScaner));
+        _states.Add(typeof(ChaseState), new ChaseState(this, enemy, enemy.Mover, enemy.Rotator, enemy.Animator));
 
-        CurrentState = newState;
-        CurrentState.Enter();
+        ChangeState<PatrolState>();
     }
 
-    public void Init(State startState)
+    public void ChangeState<T> () where T : IState
     {
-        CurrentState = startState;
-        CurrentState.Enter();
-    } 
+        var type = typeof(T);
+
+        if (CurrentState != null && CurrentState.GetType() == type)
+            return;
+
+        if (_states.TryGetValue(type, out IState newState))
+        {
+            if (CurrentState != null)
+            {
+                CurrentState.Exit();
+            }
+
+            CurrentState = newState;
+            CurrentState.Enter();
+        }
+    }
 }
