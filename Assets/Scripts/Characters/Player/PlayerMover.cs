@@ -18,12 +18,12 @@ public class PlayerMover : MonoBehaviour
 
     public void Move(float inputDistance, bool isGrounded)
     {
-        if (isGrounded == false && _rigidbody.velocity.y <= _minVerticalSpeed)
+        if (isGrounded == false && _rigidbody.linearVelocity.y <= _minVerticalSpeed)
             return;
 
         inputDistance = isGrounded ? inputDistance : inputDistance / _movingDistanceDivider;
 
-        _rigidbody.velocity = new Vector2(inputDistance * _speed, _rigidbody.velocity.y);
+        _rigidbody.linearVelocity = new Vector2(inputDistance * _speed, _rigidbody.linearVelocity.y);
     }
 
     public void JumpUp()

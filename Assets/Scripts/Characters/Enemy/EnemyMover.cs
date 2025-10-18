@@ -41,7 +41,7 @@ public class EnemyMover : MonoBehaviour
         {
             float xSpeed = _speed * transform.right.x;
 
-            _rigidbody.velocity = new Vector2(xSpeed, _rigidbody.velocity.y);
+            _rigidbody.linearVelocity = new Vector2(xSpeed, _rigidbody.linearVelocity.y);
             yield return wait;
         }
     }
